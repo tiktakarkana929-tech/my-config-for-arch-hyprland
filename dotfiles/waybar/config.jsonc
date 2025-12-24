@@ -1,0 +1,407 @@
+{
+  "$schema": "https://gist.githubusercontent.com/Alexays/0d25b3ca0a8cc5826b3476d71c5d292b/raw/waybar.schema.json",
+  "position": "top",
+  "height": 34,
+  "margin-top": 6,
+  "margin-bottom": 0,
+  "margin-left": 6,
+  "margin-right": 6,
+  "spacing": 8,
+  "layer": "top",
+  "modules-left": [
+    "custom/launcher",
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "hyprland/window"
+  ],
+  "modules-right": [
+    "cpu",
+    "temperature",
+    "memory",
+    "disk",
+    "network",
+    "pulseaudio",
+    "backlight",
+    "battery",
+    "clock",
+    "tray",
+    "custom/spotify", // <-- НОВЫЙ МОДУЛЬ ДОБАВЛЕН ЗДЕСЬ
+    "custom/power"
+  ],
+  "css": "
+    * {
+      border: none;
+      font-family: 'JetBrains Mono', 'Font Awesome 6 Free', sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+      min-height: 0;
+    }
+
+    window#waybar {
+      background: rgba(30, 30, 46, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      color: #cdd6f4;
+      border: 1px solid rgba(108, 112, 134, 0.3);
+    }
+
+    tooltip {
+      background: rgba(30, 30, 46, 0.95);
+      border-radius: 8px;
+      border: 1px solid #585b70;
+      padding: 12px;
+    }
+
+    .modules-right > widget:hover > * {
+      margin-left: 6px;
+      margin-right: 6px;
+    }
+
+    .modules-left > widget:hover > * {
+      margin-left: 6px;
+      margin-right: 6px;
+    }
+
+    #workspaces button {
+      padding: 0 12px;
+      margin: 4px 3px;
+      border-radius: 8px;
+      background: rgba(88, 91, 112, 0.3);
+      color: #cdd6f4;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 14px;
+      font-weight: 800;
+      min-width: 28px;
+      min-height: 28px;
+    }
+
+    #workspaces button:hover {
+      background: rgba(137, 180, 250, 0.8);
+      color: #1e1e2e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(137, 180, 250, 0.5);
+      border: 2px solid #89b4fa;
+      margin: 4px 6px;
+    }
+
+    #workspaces button.active {
+      background: #89b4fa;
+      color: #1e1e2e;
+      box-shadow: 0 0 12px rgba(137, 180, 250, 0.7);
+      border: 2px solid #89b4fa;
+    }
+
+    #workspaces button.urgent {
+      background: #f38ba8;
+      color: #1e1e2e;
+      border: 2px solid #f38ba8;
+    }
+
+    #workspaces button.empty {
+      opacity: 0.5;
+    }
+
+    .modules-right > widget > *,
+    .modules-left > widget > *,
+    .modules-center > widget > * {
+      padding: 0 14px;
+      margin: 4px 3px;
+      border-radius: 10px;
+      background: rgba(88, 91, 112, 0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      min-height: 28px;
+    }
+
+    .modules-right > widget:hover > *,
+    .modules-left > widget:hover > *,
+    .modules-center > widget:hover > * {
+      background: rgba(137, 180, 250, 0.7);
+      color: #1e1e2e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(137, 180, 250, 0.5);
+      border: 2px solid #89b4fa;
+      z-index: 100;
+      position: relative;
+    }
+
+    // <-- НОВЫЕ СТИЛИ ДЛЯ SPOTIFY
+    #custom-spotify {
+      background: rgba(229, 0, 0, 0.2); // Основной цвет #E50000
+      color: #f5f5f5;
+    }
+    #custom-spotify:hover {
+      background: linear-gradient(45deg, rgba(229, 0, 0, 0.8), rgba(2, 33, 134, 0.8)); // Градиент из конфига Hyprland
+      color: #1e1e2e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(229, 0, 0, 0.5);
+      border: 2px solid #E50000;
+    }
+    // КОНЕЦ НОВЫХ СТИЛЕЙ -->
+
+    #clock {
+      background: rgba(166, 227, 161, 0.2);
+    }
+
+    #clock:hover {
+      background: rgba(166, 227, 161, 0.8);
+      border-color: #a6e3a1;
+    }
+
+    #battery.charging {
+      background: rgba(166, 227, 161, 0.2);
+    }
+
+    #battery.charging:hover {
+      background: rgba(166, 227, 161, 0.8);
+      border-color: #a6e3a1;
+    }
+
+    #battery.warning:not(.charging) {
+      background: rgba(250, 179, 135, 0.2);
+    }
+
+    #battery.warning:not(.charging):hover {
+      background: rgba(250, 179, 135, 0.8);
+      border-color: #fab387;
+    }
+
+    #battery.critical:not(.charging) {
+      background: rgba(243, 139, 168, 0.2);
+      animation: blink 1s infinite;
+    }
+
+    #battery.critical:not(.charging):hover {
+      background: rgba(243, 139, 168, 0.8);
+      border-color: #f38ba8;
+    }
+
+    #temperature.critical {
+      background: rgba(243, 139, 168, 0.2);
+    }
+
+    #temperature.critical:hover {
+      background: rgba(243, 139, 168, 0.8);
+      border-color: #f38ba8;
+    }
+
+    #pulseaudio.muted:hover {
+      background: rgba(243, 139, 168, 0.8);
+      border-color: #f38ba8;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    #tray {
+      padding: 0;
+    }
+
+    #tray > * {
+      margin: 0 2px;
+    }
+
+    #custom-launcher {
+      background: rgba(137, 180, 250, 0.3);
+    }
+
+    #custom-launcher:hover {
+      background: rgba(137, 180, 250, 0.8);
+    }
+
+    #custom-power {
+      background: rgba(243, 139, 168, 0.3);
+    }
+
+    #custom-power:hover {
+      background: rgba(243, 139, 168, 0.8);
+      border-color: #f38ba8;
+    }
+  ",
+  "custom/launcher": {
+    "format": "󰣇",
+    "on-click": "rofi -show drun -show-icons",
+    "tooltip": false,
+    "on-click-right": "killall rofi || rofi -show run"
+  },
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "format-icons": {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10",
+      "urgent": "!",
+      "active": "●",
+      "default": "○"
+    },
+    "on-click": "activate",
+    "sort-by": "id",
+    "sort-order": "asc",
+    "persistent_workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
+    },
+    "disable-scroll": false,
+    "all-outputs": true,
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1"
+  },
+  "hyprland/window": {
+    "format": "{}",
+    "separate-outputs": true,
+    "max-length": 60,
+    "rewrite": {
+      "(.*) - Google Chrome": "󰈹 $1",
+      "(.*) - Mozilla Firefox": "󰈹 $1",
+      "(.*) - Telegram": "󰨀 $1",
+      "(.*) - Visual Studio Code": "󰨞 $1",
+      "kitty": "󰄛 Terminal"
+    }
+  },
+  "cpu": {
+    "interval": 2,
+    "format": "󰍛 {usage}%",
+    "tooltip": true,
+    "tooltip-format": "CPU Usage: {usage}%",
+    "on-click": "kitty btop",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
+  },
+  "temperature": {
+    "interval": 5,
+    "thermal-zone": 0,
+    "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+    "critical-threshold": 80,
+    "format": " {temperatureC}°C",
+    "format-critical": "󰈸 {temperatureC}°C",
+    "tooltip": false,
+    "on-click": "kitty sensors"
+  },
+  "memory": {
+    "interval": 5,
+    "format": "󰍛 {percentage}%",
+    "tooltip-format": "Used: {used:0.1f}GiB / {total:0.1f}GiB\nAvailable: {avail:0.1f}GiB",
+    "on-click": "kitty btop",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
+  },
+  "disk": {
+    "interval": 30,
+    "format": "󰋊 {percentage_used}%",
+    "path": "/",
+    "tooltip-format": "Used: {used} / {total} ({percentage_used}%)",
+    "on-click": "kitty btop",
+    "states": {
+      "warning": 80,
+      "critical": 95
+    }
+  },
+  "network": {
+    "interval": 5,
+    "format-wifi": "󰖩 {essid}",
+    "format-ethernet": "󰈀 Wired",
+    "format-disconnected": "󰖪 Offline",
+    "tooltip-format": "Interface: {ifname}\n Down: {bandwidthDownBytes}\n Up: {bandwidthUpBytes}\nIP: {ipaddr}",
+    "on-click": "nm-connection-editor",
+    "on-click-right": "kitty nmtui"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "{icon}󰂰 {volume}%",
+    "format-muted": "󰖁 Muted",
+    "format-icons": {
+      "headphone": "󰋋",
+      "hands-free": "󰋎",
+      "headset": "󰋎",
+      "phone": "󰏲",
+      "portable": "󰏲",
+      "car": "󰄋",
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "scroll-step": 5,
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "tooltip": false
+  },
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃝", "󰃠"],
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "tooltip": false
+  },
+  "battery": {
+    "bat": "BAT0",
+    "adapter": "AC",
+    "interval": 30,
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-full": "󰁹 {capacity}%",
+    "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "tooltip-format": "Time: {time}\nCapacity: {capacity}%\nPower: {power}W"
+  },
+  "clock": {
+    "format": "󰥔 {:%H:%M}",
+    "interval": 1,
+    "format-alt": "{:%Y-%m-%d %A}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "year",
+      "mode-mon-col": 4,
+      "on-scroll": 1,
+      "on-click-right": "mode"
+    },
+    "on-click": "cal -y",
+    "on-click-right": "tzupdate"
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  },
+  // <-- НОВЫЙ МОДУЛЬ УПРАВЛЕНИЯ SPOTIFY
+  "custom/spotify": {
+    "format": "󰓇 {}", // Иконка Spotify и текст
+    "exec": "playerctl -p spotify metadata --format '{{artist}} - {{title}}' 2>/dev/null || echo 'No player'", // Получает автора и трек
+    "exec-if": "playerctl -p spotify status 2>/dev/null", // Показывает модуль, только если Spotify запущен
+    "interval": 2, // Обновление каждые 2 секунды
+    "max-length": 40, // Макс. длина текста
+    "on-click": "playerctl -p spotify play-pause", // ЛКМ: пауза/воспр.
+    "on-click-right": "playerctl -p spotify next", // ПКМ: след. трек
+    "on-click-middle": "playerctl -p spotify previous", // СКМ: пред. трек
+    "on-scroll-up": "playerctl -p spotify volume 0.05+", // Скролл вверх: громкость +
+    "on-scroll-down": "playerctl -p spotify volume 0.05-", // Скролл вниз: громкость -
+    "escape": true // Экранирует спец. символы в названии трека
+  },
+  // КОНЕЦ НОВОГО МОДУЛЯ -->
+  "custom/power": {
+    "format": "󰐥",
+    "on-click": "wlogout",
+    "on-click-right": "systemctl poweroff",
+    "tooltip": false
+  }
+}
